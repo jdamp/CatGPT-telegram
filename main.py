@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from dotenv import dotenv_values
-from catbot import CatBot, OpenAiCatify
+from catbot import CatBot, Catifier
 
 # Setup logging
 logging.basicConfig(
@@ -13,6 +13,6 @@ logging.basicConfig(
 
 if __name__ == "__main__":
     config = dotenv_values()
-    ai = OpenAiCatify(config)
+    ai = Catifier(config)
     bot = CatBot(config, ai)
     bot.run()

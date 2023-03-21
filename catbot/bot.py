@@ -3,10 +3,11 @@ from pydub import AudioSegment
 from telegram import Update
 from telegram.ext import filters, ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler
 
-from .open_ai import OpenAiCatify
+from .ai import Catifier
+
 
 class CatBot:
-    def __init__(self, config: dict, catifier: OpenAiCatify):
+    def __init__(self, config: dict, catifier: Catifier):
         self.config = config
         self.catifier = catifier
 
