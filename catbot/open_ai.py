@@ -26,7 +26,6 @@ class OpenAiCatify:
         logging.info(f"I am answering {answer}")
         return answer
 
-
     async def reply(self, message: str):
         logging.info(f"I was called with {message}")
         completion = await openai.ChatCompletion.acreate(
@@ -39,3 +38,4 @@ class OpenAiCatify:
         answer = completion.choices[0].message.content
         logging.info(f"I am answering {answer}")
         return answer
+
