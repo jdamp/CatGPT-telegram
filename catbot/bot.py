@@ -16,16 +16,13 @@ class CatBot:
         :return:
         """
         app = ApplicationBuilder().token(self.config["TOKEN"]).build()
-        start_handler = CommandHandler("start", self.start)
-        reply_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), self.reply)
-        catify_handler = CommandHandler("catify", self.catify)
-        voice_handler = MessageHandler(filters.VOICE | filters.AUDIO, self.voice_handler)
-        unknown_handler = MessageHandler(filters.COMMAND, self.unknown)
-        app.add_handler(start_handler)
-        app.add_handler(catify_handler)
-        app.add_handler(reply_handler)
-        app.add_handler(voice_handler)
-        app.add_handler(unknown_handler)
+
+        app.add_handler(CommandHandler("start", self.start))
+        app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), self.reply))
+        app.add_handler(CommandHandler("catify", self.catify))
+        app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, self.voice_handler))
+        app.add_handler(MessageHandler(filters.COMMAND, self.unknown))
+
         app.run_polling()
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
