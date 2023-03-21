@@ -18,6 +18,21 @@ class OpenAiCatify:
             model=self.model,
             messages=[
                 self.cat_config,
+                {"role": "user", "content": "Please turn the following text into a cat text."},
+                {"role": "user", "content": message}
+            ]
+        )
+        answer = completion.choices[0].message.content
+        logging.info(f"I am answering {answer}")
+        return answer
+
+
+    async def reply(self, message: str):
+        logging.info(f"I was called with {message}")
+        completion = await openai.ChatCompletion.acreate(
+            model=self.model,
+            messages=[
+                self.cat_config,
                 {"role": "user", "content": message}
             ]
         )
