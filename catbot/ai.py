@@ -2,11 +2,11 @@ import logging
 import openai
 
 
-class OpenAiCatify:
+class Catifier:
     def __init__(self, config: dict):
         self.config = config
         openai.api_key = config["OPENAI_API_KEY"]
-        self.model ="gpt-3.5-turbo"
+        self.model = config["GPT_MODEL"]
         self.cat_config = {
             "role": "system",
             "content": "You mimick a cat and try to rephrase everything using cat-related analogies and puns"
