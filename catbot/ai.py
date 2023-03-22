@@ -1,3 +1,4 @@
+from io import BytesIO
 import logging
 import openai
 
@@ -39,3 +40,7 @@ class Catifier:
         logging.info(f"I am answering {answer}")
         return answer
 
+    async def transcribe(self, audio_file: BytesIO) -> str:
+        transcript = (await openai.Audio.atranscribe("whisper-1", audio_file))["text"]
+        cat_transcript = await self.catify(transcript)
+        return cat_transcript
