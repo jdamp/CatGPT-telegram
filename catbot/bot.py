@@ -1,4 +1,5 @@
-import openai
+from pathlib import Path
+
 from pydub import AudioSegment
 from telegram import Update
 from telegram.ext import filters, ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler
@@ -21,7 +22,9 @@ class CatBot:
         app.add_handler(CommandHandler("start", self.start))
         app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), self.reply))
         app.add_handler(CommandHandler("catify", self.catify))
-        app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, self.voice_handler))
+        app.add_handler(
+            MessageHandler(filters.VOICE | filters.AUDIO, self.voice_handler)
+        )
         app.add_handler(MessageHandler(filters.COMMAND, self.unknown))
 
         app.run_polling()
@@ -69,16 +72,16 @@ class CatBot:
         file_mp3 = f"{file_id}.mp3"
         file = await context.bot.get_file(file_id)
         await file.download_to_drive(file_ogg)
-        voice = AudioSegment.from_ogg(file_ogg).export(file_mp3, format="mp3")
 
-        # Snippet from openai
+        AudioSegment.from_ogg(file_ogg).export(file_mp3, format="mp3")
         audio_file = open(file_mp3, "rb")
-        transcript = (await openai.Audio.atranscribe("whisper-1", audio_file))["text"]
-        print(transcript)
-        cat_transcript = await self.catifier.catify(transcript)
+
         await context.bot.send_message(
-            chat_id=update.effective_chat.id, text=cat_transcript
+            chat_id=update.effective_chat.id, text=self.catifier.transcribe(audio_file)
         )
+        # clean up audio files
+        Path(file_ogg).unlink(missing_ok=True)
+        Path(file_mp3).unlink(missing_ok=True)
 
     async def unknown(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(
