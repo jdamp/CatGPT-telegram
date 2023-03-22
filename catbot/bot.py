@@ -14,9 +14,16 @@ from telegram.ext import (
 
 from .ai import Catifier
 
-
 class CatBot:
+    """
+    Telegram chatbot talking like a cat using ChatGPT
+    """
     def __init__(self, config: dict, catifier: Catifier):
+        """
+
+        :param config: dict containing key value pairs of configuration variables
+        :param catifier: ChatGPT helper class
+        """
         self.config = config
         self.catifier = catifier
 
@@ -25,7 +32,6 @@ class CatBot:
     def run(self):
         """
         Runs the bot until interrupted by the user
-        :return:
         """
         app = ApplicationBuilder().token(self.config["TOKEN"]).build()
 
@@ -45,7 +51,6 @@ class CatBot:
         """
         Decorator for chatbot functions to add a check for user authorization
         """
-
         @functools.wraps(func)
         async def inner(self, *args, **kwargs):
             update = args[0]
@@ -83,8 +88,10 @@ class CatBot:
         :return:
         """
         await context.bot.send_message(
-            chat_id=update.effective_chat.id, text="I'm a cat bot, please talk to me"
-        )
+            chat_id=update.effective_chat.id,
+            text="Hello there, I'm a cool cat AI assistant, here to help you out! I'm not lion when I say that"
+                 " I'm ready to pounce on any task you may have for me!"
+         )
 
     @check_authorized
     async def reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -113,8 +120,8 @@ class CatBot:
     @check_authorized
     async def voice_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
-
-        :param update:
+        Command to handle an incoming voice message or audio file
+        :param update: object representing an incoming update (e.g. a new message or an edited message)
         :param context:
         :return:
         """
