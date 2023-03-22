@@ -10,7 +10,7 @@ class Catifier:
         self.model = config["GPT_MODEL"]
         self.cat_config = {
             "role": "system",
-            "content": "You mimick a cat and try to rephrase everything using cat-related analogies and puns"
+            "content": "You mimick a cat and try to rephrase everything using cat-related analogies and puns",
         }
 
     async def catify(self, message: str) -> str:
@@ -19,9 +19,12 @@ class Catifier:
             model=self.model,
             messages=[
                 self.cat_config,
-                {"role": "user", "content": "Please turn the following text into a cat text."},
-                {"role": "user", "content": message}
-            ]
+                {
+                    "role": "user",
+                    "content": "Please turn the following text into a cat text.",
+                },
+                {"role": "user", "content": message},
+            ],
         )
         answer = completion.choices[0].message.content
         logging.info(f"catify is returning {answer}")
@@ -31,10 +34,7 @@ class Catifier:
         logging.info(f"reply was called with {message}")
         completion = await openai.ChatCompletion.acreate(
             model=self.model,
-            messages=[
-                self.cat_config,
-                {"role": "user", "content": message}
-            ]
+            messages=[self.cat_config, {"role": "user", "content": message}],
         )
         answer = completion.choices[0].message.content
         logging.info(f"reply is returning {answer}")

@@ -4,7 +4,13 @@ from pathlib import Path
 
 from pydub import AudioSegment
 from telegram import Update
-from telegram.ext import filters, ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler
+from telegram.ext import (
+    filters,
+    ApplicationBuilder,
+    ContextTypes,
+    CommandHandler,
+    MessageHandler,
+)
 
 from .ai import Catifier
 
@@ -90,9 +96,7 @@ class CatBot:
         """
         message_text = update.message.text
         response = await self.catifier.reply(message_text)
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id, text=response
-        )
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
     @check_authorized
     async def catify(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -104,9 +108,7 @@ class CatBot:
         """
         message_text = update.message.text
         response = await self.catifier.catify(message_text)
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id, text=response
-        )
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
     @check_authorized
     async def voice_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -127,7 +129,13 @@ class CatBot:
         Path(file_mp3).unlink(missing_ok=True)
 
     async def unknown(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Reply to an unknown command
+        :param update:
+        :param context:
+        :return:
+        """
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="Sorry, I didn't understand that command"
+            text="Sorry, I didn't understand that command",
         )
