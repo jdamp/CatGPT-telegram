@@ -78,7 +78,7 @@ class CatBot:
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Start the conversation
-        :param update:
+        :param update: object representing an incoming update (e.g. a new message or an edited message)
         :param context:
         :return:
         """
@@ -90,7 +90,7 @@ class CatBot:
     async def reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Command to reply to what the user was saying, in cat style
-        :param update:
+        :param update: object representing an incoming update (e.g. a new message or an edited message)
         :param context:
         :return:
         """
@@ -102,7 +102,7 @@ class CatBot:
     async def catify(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Command to send back the incoming message, but in cat style
-        :param update:
+        :param update: object representing an incoming update (e.g. a new message or an edited message)
         :param context:
         :return:
         """
@@ -112,6 +112,12 @@ class CatBot:
 
     @check_authorized
     async def voice_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+
+        :param update:
+        :param context:
+        :return:
+        """
         file_id = update.message.voice.file_id
         file_ogg = f"{file_id}.ogg"
         file_mp3 = f"{file_id}.mp3"
