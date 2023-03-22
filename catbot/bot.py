@@ -33,7 +33,7 @@ class CatBot:
         """
         Runs the bot until interrupted by the user
         """
-        app = ApplicationBuilder().token(self.config["TOKEN"]).build()
+        app = ApplicationBuilder().token(self.config["BOT_TOKEN"]).build()
 
         app.add_handler(CommandHandler("start", self.start))
         app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), self.reply))
