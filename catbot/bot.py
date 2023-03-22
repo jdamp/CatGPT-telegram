@@ -1,3 +1,5 @@
+import functools
+import logging
 from pathlib import Path
 
 from pydub import AudioSegment
@@ -11,6 +13,8 @@ class CatBot:
     def __init__(self, config: dict, catifier: Catifier):
         self.config = config
         self.catifier = catifier
+
+        self.allowed_users = self.config["ALLOWED_USERS"].split(",")
 
     def run(self):
         """
@@ -29,6 +33,31 @@ class CatBot:
 
         app.run_polling()
 
+    @staticmethod
+    def check_authorized(func):
+        """
+        Decorator for chatbot functions to add a check for user authorization
+        """
+
+        @functools.wraps(func)
+        async def inner(self, *args, **kwargs):
+            update = args[0]
+            user_id = str(update.effective_user.id)
+            user_name = update.message.chat.username
+            if user_id not in self.allowed_users:
+                logging.warning(
+                    f"Unauthorized access from user: {user_name} ({user_id})"
+                )
+                logging.info(f"Allowed users are: {self.allowed_users}")
+                await update.message.reply_text(
+                    "You are not allowed to use this method."
+                )
+                return
+            return await func(self, *args, **kwargs)
+
+        return inner
+
+
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Start the conversation
@@ -40,6 +69,7 @@ class CatBot:
             chat_id=update.effective_chat.id, text="I'm a cat bot, please talk to me"
         )
 
+    @check_authorized
     async def reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Command to reply to what the user was saying, in cat style
@@ -53,6 +83,7 @@ class CatBot:
             chat_id=update.effective_chat.id, text=response
         )
 
+    @check_authorized
     async def catify(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Command to send back the incoming message, but in cat style
@@ -66,6 +97,7 @@ class CatBot:
             chat_id=update.effective_chat.id, text=response
         )
 
+    @check_authorized
     async def voice_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         file_id = update.message.voice.file_id
         file_ogg = f"{file_id}.ogg"
