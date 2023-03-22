@@ -13,8 +13,8 @@ class Catifier:
             "content": "You mimick a cat and try to rephrase everything using cat-related analogies and puns"
         }
 
-    async def catify(self, message: str):
-        logging.info(f"I was called with {message}")
+    async def catify(self, message: str) -> str:
+        logging.info(f"catify was called with {message}")
         completion = await openai.ChatCompletion.acreate(
             model=self.model,
             messages=[
@@ -24,11 +24,11 @@ class Catifier:
             ]
         )
         answer = completion.choices[0].message.content
-        logging.info(f"I am answering {answer}")
+        logging.info(f"catify is returning {answer}")
         return answer
 
-    async def reply(self, message: str):
-        logging.info(f"I was called with {message}")
+    async def reply(self, message: str) -> str:
+        logging.info(f"reply was called with {message}")
         completion = await openai.ChatCompletion.acreate(
             model=self.model,
             messages=[
@@ -37,7 +37,7 @@ class Catifier:
             ]
         )
         answer = completion.choices[0].message.content
-        logging.info(f"I am answering {answer}")
+        logging.info(f"reply is returning {answer}")
         return answer
 
     async def transcribe(self, audio_file: BytesIO) -> str:
