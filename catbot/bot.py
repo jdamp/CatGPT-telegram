@@ -30,6 +30,7 @@ class CatBot:
             MessageHandler(filters.VOICE | filters.AUDIO, self.voice_handler)
         )
         app.add_handler(MessageHandler(filters.COMMAND, self.unknown))
+        app.add_handler(CommandHandler("help", self.help))
 
         app.run_polling()
 
@@ -57,6 +58,16 @@ class CatBot:
 
         return inner
 
+    async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Show helpful information on the options that this bot provides
+        :param update: object representing an incoming update (e.g. a new message or an edited message)
+        :param context:
+        :return:
+        """
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id, text="Help me!"
+        )
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
