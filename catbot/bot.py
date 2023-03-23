@@ -60,7 +60,7 @@ class CatBot:
             user_name = update.message.chat.username
             if user_name not in self.allowed_users:
                 logging.warning(
-                    f"Unauthorized access from user: {user_name})"
+                    f"Unauthorized access from user: {user_name}"
                 )
                 logging.info(f"Allowed users are: {self.allowed_users}")
                 await update.message.reply_text(
