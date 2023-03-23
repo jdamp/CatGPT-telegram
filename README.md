@@ -8,4 +8,7 @@ You can talk to it just like the normal API, but it will throw in cat puns and f
 
 ### Usage
 Copy the file `.env_template` to `.env`.
-Add your telegram bot token and the OpenAI API access token to the `.env` file. 
+Add your telegram bot token and the OpenAI API access token to the `.env` file.
+- Run `pip install pipenv --user`
+- Run `pipenv shell`
+- Run `python main.py`
