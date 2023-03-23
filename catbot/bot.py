@@ -44,13 +44,14 @@ class CatBot:
         app.add_handler(
             MessageHandler(filters.VOICE | filters.AUDIO, self.voice_handler)
         )
+        app.add_handler(CommandHandler("show_chats", self.show_chats))
         app.add_handler(MessageHandler(filters.COMMAND, self.unknown))
         app.add_handler(CommandHandler("help", self.help))
 
         app.run_polling()
 
     @staticmethod
-    def check_authorized(func):
+    def check_authorized_user(func):
         """
         Decorator for chatbot functions to add a check for user authorization
         """
@@ -96,7 +97,7 @@ class CatBot:
                  " I'm ready to pounce on any task you may have for me!"
          )
 
-    @check_authorized
+    @check_authorized_user
     async def reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Command to reply to what the user was saying, in cat style
@@ -108,7 +109,7 @@ class CatBot:
         response = await self.catifier.reply(message_text)
         await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
-    @check_authorized
+    @check_authorized_user
     async def catify(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Command to send back the incoming message, but in cat style
@@ -120,7 +121,7 @@ class CatBot:
         response = await self.catifier.catify(message_text)
         await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
-    @check_authorized
+    @check_authorized_user
     async def voice_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         Command to handle an incoming voice message or audio file
