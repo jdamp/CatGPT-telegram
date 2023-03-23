@@ -64,6 +64,7 @@ class CatBot:
                     "You are not allowed to use this method."
                 )
                 return
+            logging.info(f"Authorized access from user: {user_name})")
             return await func(self, *args, **kwargs)
 
         return inner
