@@ -3,16 +3,18 @@ import logging
 from pathlib import Path
 
 from pydub import AudioSegment
-from telegram import Update
+from telegram import Update, InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import (
     filters,
     ApplicationBuilder,
     ContextTypes,
     CommandHandler,
+    InlineQueryHandler,
     MessageHandler,
 )
 
 from .ai import Catifier
+
 
 class CatBot:
     """
@@ -36,6 +38,7 @@ class CatBot:
         app = ApplicationBuilder().token(self.config["BOT_TOKEN"]).build()
 
         app.add_handler(CommandHandler("start", self.start))
+        app.add_handler(InlineQueryHandler(self.inline_query))
         app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), self.reply))
         app.add_handler(CommandHandler("catify", self.catify))
         app.add_handler(
@@ -140,6 +143,28 @@ class CatBot:
         # clean up audio files
         Path(file_ogg).unlink(missing_ok=True)
         Path(file_mp3).unlink(missing_ok=True)
+
+    async def inline_query(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Handles an inline query. This is when you type @botusername <query>
+        :param update:
+        :param context:
+        :return:
+        """
+        query = update.inline_query.query
+        if not query:
+            return
+
+        results = [
+            InlineQueryResultArticle(
+                id=query,
+                title="Ask CatGPT",
+                input_message_content=InputTextMessageContent(query),
+                description=query,
+                thumb_url='https://user-images.githubusercontent.com/13839523/227260331-764d699a-e99f-4920-9b03-6b2bae6e0fda.png'
+            )
+        ]
+        await update.inline_query.answer(results)
 
     async def unknown(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
