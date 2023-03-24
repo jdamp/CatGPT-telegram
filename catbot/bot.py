@@ -44,7 +44,6 @@ class CatBot:
         app.add_handler(
             MessageHandler(filters.VOICE | filters.AUDIO, self.voice_handler)
         )
-        app.add_handler(CommandHandler("show_chats", self.show_chats))
         app.add_handler(MessageHandler(filters.COMMAND, self.unknown))
         app.add_handler(CommandHandler("help", self.help))
 
