@@ -68,3 +68,14 @@ class Catifier:
         transcript = (await openai.Audio.atranscribe("whisper-1", audio_file))["text"]
         cat_transcript = await self.catify(transcript)
         return cat_transcript
+
+    async def generate_image(self, prompt: str, size: str) -> str:
+        logging.info(f"Generate image was called with {prompt=}")
+        response = await openai.Image.acreate(
+            prompt=prompt,
+            n=1,
+            size=size
+        )
+        image_url = response['data'][0]['url']
+        logging.info(f"Generate image URL: {image_url}")
+        return image_url

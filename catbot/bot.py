@@ -41,6 +41,7 @@ class CatBot:
         app.add_handler(InlineQueryHandler(self.inline_query))
         app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), self.reply))
         app.add_handler(CommandHandler("catify", self.catify))
+        app.add_handler(CommandHandler("image", self.generate_image))
         app.add_handler(
             MessageHandler(filters.VOICE | filters.AUDIO, self.voice_handler)
         )
@@ -165,6 +166,21 @@ class CatBot:
             )
         ]
         await update.inline_query.answer(results)
+
+    async def generate_image(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Interface to the DALL E image generation. Not particularly cat-specific though.
+        :param update:
+        :param context:
+        :return:
+        """
+        IMAGE_SIZE = "512x512"
+        prompt = update.message.text
+        image_url = await self.catifier.generate_image(prompt, IMAGE_SIZE)
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f"Look at this image: {image_url}"
+        )
 
     async def unknown(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
