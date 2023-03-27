@@ -57,7 +57,7 @@ class CatBot:
         @functools.wraps(func)
         async def inner(self, *args, **kwargs):
             update = args[0]
-            user_name = update.message.chat.username
+            user_name = update.message.from_user.username
             if user_name not in self.allowed_users:
                 logging.warning(
                     f"Unauthorized access from user: {user_name}"
