@@ -138,8 +138,9 @@ class CatBot:
         AudioSegment.from_ogg(file_ogg).export(file_mp3, format="mp3")
         audio_file = open(file_mp3, "rb")
 
+        message = await self.catifier.transcribe(audio_file)
         await context.bot.send_message(
-            chat_id=update.effective_chat.id, text=self.catifier.transcribe(audio_file)
+            chat_id=update.effective_chat.id, text=message
         )
         # clean up audio files
         Path(file_ogg).unlink(missing_ok=True)
